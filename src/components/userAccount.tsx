@@ -45,7 +45,7 @@ function UserAccount({ user }: Props) {
           onClick={() => {
             signOut();
           }}
-          className="text-red-400 flex gap-2 items-center text-center"
+          className="text-red-400 flex gap-2 items-center justify-center focus:text-red-600 focus:bg-white"
         >
           Sign Out
           <LogOut size={18} />

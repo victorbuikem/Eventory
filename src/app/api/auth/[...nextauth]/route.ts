@@ -13,6 +13,10 @@ const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   adapter: <Adapter>PrismaAdapter(prisma),
+  pages: {
+    signIn: "/",
+    signOut: "/",
+  },
   providers: [
     GoogleProvider({
       clientId,
@@ -23,8 +27,8 @@ const authOptions: NextAuthOptions = {
 
 const handler = NextAuth(authOptions);
 
-export { handler as GET, handler as POST };
-
 export function getAuthSession() {
   return getServerSession(authOptions);
 }
+
+export { handler as GET, handler as POST };

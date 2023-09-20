@@ -24,7 +24,7 @@ function EventCard({ event_name, event_id, description, location }: Props) {
   return (
     <Card
       className="cursor-pointer"
-      onClick={() => router.push(`events/n/${event_id}`)}
+      onClick={() => router.push(`events/${event_id}`)}
     >
       <CardHeader className="flex flex-row items-center justify-between p-4">
         <CardTitle>{event_name}</CardTitle>

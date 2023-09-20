@@ -151,11 +151,11 @@ function EventCreation({}: Props) {
       </Card>
       {eventLink && (
         <div className="bg-slate-100 flex items-center rounded-2xl justify-between gap-2 p-2 mt-4">
-          <span>{`http://localhost:3000/rsvp/p/${eventLink}`}</span>
+          <span>{`http://localhost:3000/rsvp/${eventLink}`}</span>
           <button
             onClick={() => {
               navigator.clipboard.writeText(
-                `http://localhost:3000/rsvp/p/${eventLink}`
+                `http://localhost:3000/rsvp/${eventLink}`
               );
             }}
             className="bg-slate-200 h-8 w-8 rounded-full p-2 flex justify-center items-center"

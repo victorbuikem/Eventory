@@ -62,4 +62,20 @@ model Event {
   created_at  DateTime @default(now())
   active      Boolean  @default(true)
   creator     User     @relation(fields: [creator_id], references: [id], onDelete: Cascade)
+  Rsvp        Rsvp[]
+}
+
+model Rsvp {
+  invite_id    Int        @id @default(autoincrement())
+  invite_name  String
+  invite_email String
+  attending    InviteType
+  event_id     String
+  event        Event      @relation(fields: [event_id], references: [event_id], onDelete: Cascade)
+}
+
+enum InviteType {
+  going
+  not_going
+  not_sure
 }

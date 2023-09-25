@@ -1,6 +1,5 @@
 import RsvpForm from "@/components/rsvpForm";
 import { prisma } from "@/lib/server/prisma";
-import Provider from "./provider";
 
 async function Page({ params }: { params: { eventId: string } }) {
   const res = await prisma.event.findFirst({
@@ -12,11 +11,7 @@ async function Page({ params }: { params: { eventId: string } }) {
     return null;
   }
 
-  return (
-    <Provider>
-      <RsvpForm slug={res.event_id} title={res.event_name} />
-    </Provider>
-  );
+  return <RsvpForm slug={res.event_id} title={res.event_name} />;
 }
 
 export default Page;

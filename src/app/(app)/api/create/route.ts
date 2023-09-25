@@ -9,8 +9,7 @@ export async function POST(req: Request, res: Response) {
     const body = await req.json();
     const { name, location, eventDate } = eventCreationSchema.parse(body);
     const userId = await getUserId();
-
-    const tes = await prisma.event.create({
+    const res = await prisma.event.create({
       data: {
         event_name: name,
         event_date: new Date(eventDate),
@@ -20,7 +19,7 @@ export async function POST(req: Request, res: Response) {
     });
 
     return NextResponse.json(
-      { success: true, eventId: tes.event_id },
+      { success: true, eventId: res.event_id },
       { status: 200 }
     );
   } catch (error) {

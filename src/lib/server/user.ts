@@ -1,4 +1,4 @@
-import { getAuthSession } from "@/app/api/auth/[...nextauth]/route";
+import { getAuthSession } from "@/app/(app)/api/auth/[...nextauth]/route";
 import { prisma } from "./prisma";
 
 export async function getUserId() {

@@ -68,7 +68,7 @@ model Event {
 model Rsvp {
   invite_id    Int        @id @default(autoincrement())
   invite_name  String
-  invite_email String
+  invite_email String     @unique
   attending    InviteType
   event_id     String
   event        Event      @relation(fields: [event_id], references: [event_id], onDelete: Cascade)

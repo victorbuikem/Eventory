@@ -44,16 +44,16 @@ function RsvpForm({ slug, title }: Props) {
   const form = useForm<Input>({
     resolver: zodResolver(RsvpAcceptSchema),
     defaultValues: {
-      name: "",
+      name: "o",
       email: "",
       attending: undefined,
-      event_id: parseInt(slug),
+      event_id: slug,
     },
   });
 
   const { mutate: createEvent, isLoading } = useMutation({
     mutationFn: async ({ name, email, event_id, attending }: Input) => {
-      const res = await axios.post("/api/v1/rsvp", {
+      const res = await axios.post("https://nru.vercel.appapi/rsvp", {
         name,
         email,
         event_id,
@@ -70,7 +70,7 @@ function RsvpForm({ slug, title }: Props) {
         name: input.name,
         email: input.email,
         attending: input.attending,
-        event_id: parseInt(slug),
+        event_id: slug,
       },
       {
         onSuccess: () => {
@@ -160,7 +160,7 @@ function RsvpForm({ slug, title }: Props) {
                     )}
                   />
                   <Button
-                    disabled={success}
+                    // disabled={success}
                     type="submit"
                     className="w-full mt-4 tracking-tight leading-none text-lg"
                   >

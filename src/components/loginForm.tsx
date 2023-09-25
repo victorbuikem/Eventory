@@ -25,7 +25,7 @@ export default function LoginForm() {
       <CardContent className="grid gap-4">
         <Button
           onClick={() => {
-            signIn("google");
+            signIn("google", { callbackUrl: "/events" });
           }}
           variant="outline"
           className="w-full"

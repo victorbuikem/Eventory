@@ -53,7 +53,7 @@ function RsvpForm({ slug, title }: Props) {
 
   const { mutate: createEvent, isLoading } = useMutation({
     mutationFn: async ({ name, email, event_id, attending }: Input) => {
-      const res = await axios.post("https://eventory.vercel.appapi/rsvp", {
+      const res = await axios.post("https://eventory.vercel.app/api/rsvp", {
         name,
         email,
         event_id,

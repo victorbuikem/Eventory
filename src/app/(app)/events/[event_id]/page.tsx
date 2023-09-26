@@ -18,7 +18,7 @@ async function EventDetailPage({ params }: Props) {
   }
 
   const { data: inviteRes } = await axios.get(
-    `https://eventory.vercel.appapi/rsvp?id=${params.event_id}`
+    `https://eventory.vercel.app/api/rsvp?id=${params.event_id}`
   );
   return (
     <div className="pt-16 flex flex-row flex-1 h-[571px]">
@@ -44,7 +44,7 @@ async function EventDetailPage({ params }: Props) {
           <ScrollArea className="h-[73.4%] px-4 py-2">
             {/* <CopyButton
             className="absolute top-2 right-2"
-             copyUrl={`https://eventory.vercel.appevent/p/${params.slug}`}
+             copyUrl={`https://eventory.vercel.app/event/p/${params.slug}`}
            /> */}
             {inviteRes.data.map(
               ({ invite_id, invite_name, invite_email, attending }: any) => {
@@ -82,7 +82,7 @@ async function EventDetailPage({ params }: Props) {
               <p className="text-lg text-center leading-none">
                 You do not have any invitees
               </p>
-              {/* <Copy url={`https://eventory.vercel.apprsvp/${params.slug}`} /> */}
+              {/* <Copy url={`https://eventory.vercel.app/rsvp/${params.slug}`} /> */}
             </div>
           </div>
         )}

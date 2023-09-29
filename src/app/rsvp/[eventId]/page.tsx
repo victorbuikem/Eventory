@@ -8,7 +8,7 @@ async function Page({ params }: { params: { eventId: string } }) {
     },
   });
   if (!res) {
-    return null;
+    return <p>Invalid Invite Link</p>;
   }
 
   return <RsvpForm slug={res.event_id} title={res.event_name} />;

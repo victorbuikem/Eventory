@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/server/prisma";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
+import { ArrowLeft, Edit } from "lucide-react";
 import axios from "axios";
 type Props = {
   params: { event_id: string };
@@ -18,34 +19,36 @@ async function EventDetailPage({ params }: Props) {
   }
 
   const { data: inviteRes } = await axios.get(
-    `https://eventory.vercel.app/api/rsvp?id=${params.event_id}`
+    `${process.env.SERVER_URL}api/rsvp?id=${params.event_id}`
   );
   return (
-    <div className="pt-16 flex flex-row flex-1 h-[571px]">
+    <div className="pt-16 flex flex-row flex-1 h-[651px]">
       <section className="w-3/5">
         <div className="p-4 py-2">
-          <div className="flex gap-2 items-center">
-            {/* <Link href="/events" className="p-2 text-primary">
+          <div className="flex gap-2 items-center relative">
+            <Link href="/events" className="p-2 text-primary">
               <ArrowLeft size={20} />
-            </Link> */}
+            </Link>
             <h2 className="text-2xl font-semibold tracking-tight text-slate-800">
               {res?.event_name}
             </h2>
+            <Link
+              className="p-2 text-primary absolute right-0"
+              href={`/edit/${params.event_id}`}
+            >
+              <Edit />
+            </Link>
           </div>
           <p className="text-gray-500 tracking-tight leading-6 max-h-[70px] overflow-hidden text-ellipsis">
             {res?.description}
           </p>
-          <div className="flex justify-between">
+          <div className="flex justify-between mt-2">
             <span>{res?.location}</span>
             <span>{res?.event_date.toLocaleDateString()}</span>
           </div>
         </div>
         {inviteRes.data.length >= 1 && (
           <ScrollArea className="h-[73.4%] px-4 py-2">
-            {/* <CopyButton
-            className="absolute top-2 right-2"
-             copyUrl={`https://eventory.vercel.app/event/p/${params.slug}`}
-           /> */}
             {inviteRes.data.map(
               ({ invite_id, invite_name, invite_email, attending }: any) => {
                 return (
@@ -82,12 +85,11 @@ async function EventDetailPage({ params }: Props) {
               <p className="text-lg text-center leading-none">
                 You do not have any invitees
               </p>
-              {/* <Copy url={`https://eventory.vercel.app/rsvp/${params.slug}`} /> */}
             </div>
           </div>
         )}
       </section>
-      <div className="bg-gradient-to-bl from-purple-600 to-orange-400 w-2/5 h-full"></div>
+      <div className="bg-gradient-to-bl from-purple-800 via-blue-300 to-yellow-200 w-2/5 h-full"></div>
     </div>
   );
 }

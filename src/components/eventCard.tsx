@@ -27,7 +27,6 @@ function EventCard({ event_name, event_id, description, location }: Props) {
       <Card className="cursor-pointer">
         <CardHeader className="flex flex-row items-center justify-between p-4">
           <CardTitle>{event_name}</CardTitle>
-          {/* <CopyButton copyUrl={`https://eventory.vercel.app/rsvp/p/${event_id}`} /> */}
         </CardHeader>
         <CardContent>
           <p className="h-10 truncate">{description}</p>

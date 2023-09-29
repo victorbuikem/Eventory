@@ -49,7 +49,7 @@ function EventCreation({}: Props) {
 
   const { mutate: setCreation, isLoading } = useMutation({
     mutationFn: async ({ name, location, eventDate }: Input) => {
-      const res = await axios.post("https://eventory.vercel.app/api/create", {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}api/create`, {
         name,
         location,
         eventDate,
@@ -155,11 +155,11 @@ function EventCreation({}: Props) {
       </Card>
       {eventLink && (
         <div className="bg-slate-100 flex items-center rounded-2xl justify-between gap-2 p-2 mt-4">
-          <span>{`https://eventory.vercel.app/rsvp/${eventLink}`}</span>
+          <span>{`${process.env.NEXT_PUBLIC_SERVER_URL}rsvp/${eventLink}`}</span>
           <button
             onClick={() => {
               navigator.clipboard.writeText(
-                `https://eventory.vercel.app/rsvp/${eventLink}`
+                `${process.env.NEXT_PUBLIC_SERVER_URL}rsvp/${eventLink}`
               );
             }}
             className="bg-slate-200 h-8 w-8 rounded-full p-2 flex justify-center items-center"

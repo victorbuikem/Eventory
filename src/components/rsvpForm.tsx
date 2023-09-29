@@ -44,7 +44,7 @@ function RsvpForm({ slug, title }: Props) {
   const form = useForm<Input>({
     resolver: zodResolver(RsvpAcceptSchema),
     defaultValues: {
-      name: "o",
+      name: "",
       email: "",
       attending: undefined,
       event_id: slug,
@@ -53,12 +53,15 @@ function RsvpForm({ slug, title }: Props) {
 
   const { mutate: createEvent, isLoading } = useMutation({
     mutationFn: async ({ name, email, event_id, attending }: Input) => {
-      const res = await axios.post("https://eventory.vercel.app/api/rsvp", {
-        name,
-        email,
-        event_id,
-        attending,
-      });
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}api/rsvp`,
+        {
+          name,
+          email,
+          event_id,
+          attending,
+        }
+      );
       return res.data;
     },
   });
@@ -95,7 +98,7 @@ function RsvpForm({ slug, title }: Props) {
           />
         )}
         <main className="flex flex-col items-center justify-center flex-1 flex-shrink-0 px-5 pt-16 pb-8 border-r shadow-lg h-screen bg-slate-100">
-          <Card className="w-[425px]">
+          <Card className="w-[425px] relative">
             <CardHeader>
               <CardTitle>{title}</CardTitle>
               <CardDescription>
@@ -112,7 +115,7 @@ function RsvpForm({ slug, title }: Props) {
                       <FormItem>
                         <FormLabel>Username</FormLabel>
                         <FormControl>
-                          <Input placeholder="john doe" {...field} />
+                          <Input placeholder="Jackie Yon" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -177,9 +180,16 @@ function RsvpForm({ slug, title }: Props) {
                 </form>
               </Form>
             </CardContent>
+            <a
+              href="https://eventory.vercel.app"
+              target="blank"
+              className="absolute -bottom-3 right-4 bg-white ring-1 ring-purple-500 shadow-lg shadow-fuchsia-500 px-2 rounded-2xl h-5 text-primary font-semibold text-sm hover:shadow-xl hover:shadow-fuchsia-600"
+            >
+              Eventory
+            </a>
           </Card>
         </main>
-        <div className="basis-1/3 bg-gradient-to-tr from-[#4251C1] via-[#FE5990] to-[#F9F871]" />
+        <div className="basis-[40%] bg-gradient-to-tr from-[#4251C1] via-[#FE5990] to-[#F9F871]" />
       </div>
     </div>
   );

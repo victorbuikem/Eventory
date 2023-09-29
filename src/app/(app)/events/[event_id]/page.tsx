@@ -19,7 +19,7 @@ async function EventDetailPage({ params }: Props) {
   }
 
   const { data: inviteRes } = await axios.get(
-    `${process.env.SERVER_URL}api/rsvp?id=${params.event_id}`
+    `${process.env.NEXT_PUBLIC_SERVER_URL}api/rsvp?id=${params.event_id}`
   );
   return (
     <div className="pt-16 flex flex-row flex-1 h-[651px]">

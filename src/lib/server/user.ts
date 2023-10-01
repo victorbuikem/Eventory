@@ -7,7 +7,6 @@ export async function getUserId() {
   const session = await getAuthSession();
   if (!session) {
     redirect("/");
-    // return null;
   }
   const userId = await prisma.user.findUnique({
     where: {

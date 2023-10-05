@@ -25,7 +25,7 @@ import axios from "axios";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { ArrowLeft, Link as LinkIcon } from "lucide-react";
+import { ArrowLeft, Copy } from "lucide-react";
 import Link from "next/link";
 
 /*Types */
@@ -34,7 +34,7 @@ type Props = {};
 
 function EventCreation({}: Props) {
   const { toast } = useToast();
-  const [eventLink, setEventId] = useState<string>();
+  const [eventLink, setEventLink] = useState<string>();
   const [created, setCreated] = useState(false);
   const router = useRouter();
   const form = useForm<Input>({
@@ -49,11 +49,14 @@ function EventCreation({}: Props) {
 
   const { mutate: setCreation, isLoading } = useMutation({
     mutationFn: async ({ name, location, eventDate }: Input) => {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}api/create`, {
-        name,
-        location,
-        eventDate,
-      });
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}api/create`,
+        {
+          name,
+          location,
+          eventDate,
+        }
+      );
       return res.data;
     },
   });
@@ -66,7 +69,7 @@ function EventCreation({}: Props) {
       },
       {
         onSuccess: ({ eventId }) => {
-          setEventId(eventId);
+          setEventLink(eventId);
           setCreated(true);
           toast({
             title: "Yay! Your event link 🎉",
@@ -153,10 +156,11 @@ function EventCreation({}: Props) {
           </Form>
         </CardContent>
       </Card>
-      {eventLink && (
+      {created && (
         <div className="bg-slate-100 flex items-center rounded-2xl justify-between gap-2 p-2 mt-4">
           <span>{`${process.env.NEXT_PUBLIC_SERVER_URL}rsvp/${eventLink}`}</span>
           <button
+            title="Click to Copy"
             onClick={() => {
               navigator.clipboard.writeText(
                 `${process.env.NEXT_PUBLIC_SERVER_URL}rsvp/${eventLink}`
@@ -164,7 +168,7 @@ function EventCreation({}: Props) {
             }}
             className="bg-slate-200 h-8 w-8 rounded-full p-2 flex justify-center items-center"
           >
-            <LinkIcon />
+            <Copy />
           </button>
         </div>
       )}

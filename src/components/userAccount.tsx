@@ -10,6 +10,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 type Props = {
   user: {
@@ -21,6 +22,7 @@ type Props = {
 
 function UserAccount({ user }: Props) {
   let fallback = user.name?.toLocaleUpperCase() || "";
+  const router = useRouter();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>

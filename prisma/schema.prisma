@@ -53,16 +53,17 @@ model VerificationToken {
 }
 
 model Event {
-  event_id    String   @id @default(cuid())
+  event_id    String     @id @default(cuid())
   event_name  String
   event_date  DateTime
   location    String?
   description String?
   creator_id  String
-  created_at  DateTime @default(now())
-  active      Boolean  @default(true)
-  creator     User     @relation(fields: [creator_id], references: [id], onDelete: Cascade)
+  created_at  DateTime   @default(now())
+  active      Boolean    @default(true)
+  creator     User       @relation(fields: [creator_id], references: [id], onDelete: Cascade)
   Rsvp        Rsvp[]
+  RsvpForm    RsvpForm[]
 }
 
 model Rsvp {
@@ -78,4 +79,21 @@ enum InviteType {
   going
   not_going
   not_sure
+}
+
+model RsvpForm {
+  form_id                   String  @id
+  form_title                String
+  primary_color             String  @default("#c242d6")
+  font                      String  @default("default")
+  logo                      String?
+  your_name_disply          Boolean @default(true)
+  your_name_label           String  @default("Your Name")
+  your_name_placeholder     String  @default("Jackie Yon")
+  email_address_display     Boolean @default(true)
+  email_address_label       String  @default("Email Address")
+  email_address_placeholder String  @default("test@user.com")
+  submit_invite_label       String  @default("Accept Invite")
+  description               String  @default("Accept an Invitation to this event. Fill your infomation below")
+  event                     Event   @relation(fields: [form_id], references: [event_id])
 }

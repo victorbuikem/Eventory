@@ -9,12 +9,21 @@ export async function POST(req: Request, res: Response) {
     const body = await req.json();
     const { name, location, eventDate } = eventCreationSchema.parse(body);
     const userId = await getUserId();
+
     const res = await prisma.event.create({
       data: {
         event_name: name,
         event_date: new Date(eventDate),
         location,
         creator_id: userId || "",
+      },
+    });
+
+    //create default rsvpform
+    const rsvpForm = await prisma.rsvpForm.create({
+      data: {
+        form_id: res.event_id as string,
+        form_title: name,
       },
     });
 
@@ -35,4 +44,24 @@ export async function POST(req: Request, res: Response) {
       { status: 500 }
     );
   }
+}
+
+export async function PUT(req: Request, res: Response) {
+  const body = await req.json();
+  const updated_rsvp_form = await prisma.rsvpForm.update({
+    where: {
+      form_id: body.form_id as string,
+    },
+    data: {
+      ...body,
+    },
+  });
+  return NextResponse.json(
+    {
+      success: true,
+    },
+    {
+      status: 200,
+    }
+  );
 }

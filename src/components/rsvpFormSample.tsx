@@ -27,108 +27,42 @@ import {
 } from "./ui/select";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { useMutation } from "@tanstack/react-query";
-import ConfettiExplosion from "react-confetti-explosion";
-import axios from "axios";
-import { useState } from "react";
 /*Types */
-type Props = {
-  slug: string;
-  title: string | undefined;
-  description: string | undefined;
-  your_name_label: string | undefined;
-  buttonLabel: string | undefined;
-  email_address_label: string | undefined;
-  primaryColor: string | undefined;
-  your_name_display: boolean | undefined;
-  your_name_placeholder: string | undefined;
-  email_address_placeholder: string | undefined;
-  email_address_display: boolean | undefined;
-};
+type Props = {};
 
 type Input = z.infer<typeof RsvpAcceptSchema>;
 
-function RsvpForm({
-  slug,
-  title,
-  description,
+function RsvpFormSample({
+  form_title,
+  primary_color,
+  font,
+  logo,
+  your_name_disply,
   your_name_label,
-  buttonLabel,
-  email_address_label,
-  primaryColor,
-  your_name_display,
   your_name_placeholder,
-  email_address_placeholder,
   email_address_display,
-
-}: Props) {
-  const [success, setSucess] = useState(false);
-  const form = useForm<Input>({
-    resolver: zodResolver(RsvpAcceptSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      attending: undefined,
-      event_id: slug,
-    },
-  });
-
-  const { mutate: createEvent, isLoading } = useMutation({
-    mutationFn: async ({ name, email, event_id, attending }: Input) => {
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}api/rsvp`,
-        {
-          name,
-          email,
-          event_id,
-          attending,
-        }
-      );
-      return res.data;
-    },
-  });
-
-  /*Submit Functionality */
-  function onSubmit(input: Input) {
-    createEvent(
-      {
-        name: input.name,
-        email: input.email,
-        attending: input.attending,
-        event_id: slug,
-      },
-      {
-        onSuccess: () => {
-          setSucess(true);
-        },
-        onError: () => {
-          alert("Something went wrong");
-        },
-      }
-    );
-  }
+  email_address_label,
+  email_address_placeholder,
+  submit_invite_label,
+  description,
+}: any) {
+  const form = useForm<Input>();
 
   return (
-    <div className="min-h-full">
-      <div className="flex flex-1">
-        {success && (
-          <ConfettiExplosion
-            duration={3000}
-            particleCount={400}
-            width={2000}
-            force={0.9}
-          />
-        )}
-        <main className="flex flex-col items-center justify-center flex-1 flex-shrink-0 px-5 pt-16 pb-8 border-r shadow-lg h-screen bg-slate-100">
-          <Card className="w-[425px] relative">
+    <div className="h-full rounded-lg">
+      <div className="flex flex-1 h-full rounded-lg">
+        <main className="flex flex-col items-center justify-center flex-1 flex-shrink-0 px-5 pt-16 pb-8 border-r shadow-lg h-full bg-slate-100">
+          <Card className="w-[425px] relative scale-75">
+            <div className="absolute w-[425px] h-full bg-black/0" />
+
             <CardHeader>
-              <CardTitle>{title}</CardTitle>
+              <CardTitle>{form_title}</CardTitle>
               <CardDescription>{description}</CardDescription>
             </CardHeader>
             <CardContent>
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)}>
-                  {your_name_display && (
+                <form>
+                  {your_name_disply && (
                     <FormField
                       control={form.control}
                       name="name"
@@ -193,19 +127,11 @@ function RsvpForm({
                     )}
                   />
                   <Button
+                    style={{ backgroundColor: primary_color }}
                     type="submit"
-                    className="w-full mt-4 tracking-tight leading-none text-lg"
-                    style={{ backgroundColor: primaryColor }}
+                    className="w-full mt-4 tracking-tight leading-none text-lg cursor-default"
                   >
-                    {isLoading ? (
-                      <div className="flex space-x-2 animate-pulse">
-                        <div className="h-2 w-2 rounded-full bg-white animate-[bounce_3s_infinite]" />
-                        <div className="h-2 w-2 rounded-full bg-white animate-[bounce_1.5s_infinite]" />
-                        <div className="h-2 w-2 rounded-full bg-white animate-bounce" />
-                      </div>
-                    ) : (
-                      <p>{buttonLabel}</p>
-                    )}
+                    {submit_invite_label}
                   </Button>
                 </form>
               </Form>
@@ -220,7 +146,7 @@ function RsvpForm({
           </Card>
         </main>
         <div
-          style={{ backgroundColor: primaryColor }}
+          style={{ backgroundColor: primary_color }}
           className="basis-[40%]"
         />
       </div>
@@ -228,4 +154,4 @@ function RsvpForm({
   );
 }
 
-export default RsvpForm;
+export default RsvpFormSample;

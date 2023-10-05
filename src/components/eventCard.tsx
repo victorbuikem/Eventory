@@ -1,14 +1,6 @@
 "use client";
-// import CopyButton from "@/components/copyButton";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 type Props = {
   event_id: string;
@@ -21,12 +13,13 @@ type Props = {
 };
 
 function EventCard({ event_name, event_id, description, location }: Props) {
-  const router = useRouter();
   return (
-    <Link href={`events/${event_id}`}>
+    <Link href={`/events/${event_id}`}>
       <Card className="cursor-pointer">
         <CardHeader className="flex flex-row items-center justify-between p-4">
-          <CardTitle>{event_name}</CardTitle>
+          <Link href={`events/${event_id}`}>
+            <CardTitle>{event_name}</CardTitle>
+          </Link>
         </CardHeader>
         <CardContent>
           <p className="h-10 truncate">{description}</p>

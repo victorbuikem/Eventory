@@ -38,7 +38,7 @@ import {
 } from "./ui/accordion";
 import { Switch } from "./ui/switch";
 import { useMutation } from "@tanstack/react-query";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import axios from "axios";
 
 type Input = z.infer<typeof RsvpFormLabelSchema>;
@@ -63,7 +63,6 @@ function EditForm({
     description,
   },
 }: Props) {
-  const { toast } = useToast();
   const form = useForm<Input>({
     resolver: zodResolver(RsvpFormLabelSchema),
     defaultValues: {
@@ -98,9 +97,7 @@ function EditForm({
       { ...input },
       {
         onSuccess: () => {
-          toast({
-            title: "Yay! Updated Successfully 🎉",
-          });
+          toast.success("Yay! Updated Successfully 🎉");
         },
       }
     );

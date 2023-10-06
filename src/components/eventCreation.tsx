@@ -22,7 +22,7 @@ import z from "zod";
 import { eventCreationSchema } from "@/lib/schema";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ArrowLeft, Copy } from "lucide-react";
@@ -33,7 +33,6 @@ type Input = z.infer<typeof eventCreationSchema>;
 type Props = {};
 
 function EventCreation({}: Props) {
-  const { toast } = useToast();
   const [eventLink, setEventLink] = useState<string>();
   const [created, setCreated] = useState(false);
   const router = useRouter();
@@ -71,9 +70,7 @@ function EventCreation({}: Props) {
         onSuccess: ({ eventId }) => {
           setEventLink(eventId);
           setCreated(true);
-          toast({
-            title: "Yay! Your event link 🎉",
-          });
+          toast.success("Yay! Your event link 🎉");
         },
       }
     );

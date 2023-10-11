@@ -30,6 +30,17 @@ export const appRouter = router({
       });
       return event;
     }),
+  getInvitedResponse: privateProcedure
+    .input(z.object({ event_id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const res = await prisma.rsvp.findMany({
+        where: {
+          event_id: input.event_id,
+        },
+      });
+
+      return res;
+    }),
 });
 
 export type AppRouter = typeof appRouter;

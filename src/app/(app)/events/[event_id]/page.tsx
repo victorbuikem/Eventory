@@ -1,10 +1,9 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/server/prisma";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
 import { ArrowLeft, Edit } from "lucide-react";
-import axios from "axios";
 import { getUserId } from "@/lib/server/user";
+import InvitedList from "@/components/invitedList";
 
 type Props = {
   params: { event_id: string };
@@ -21,9 +20,6 @@ async function EventDetailPage({ params }: Props) {
   });
   if (!res) notFound();
 
-  // const { data: inviteRes } = await axios.get(
-  //   `${process.env.NEXT_PUBLIC_SERVER_URL}api/rsvp?id=${params.event_id}`
-  // );
   return (
     <div className="flex flex-col-reverse md:flex-row flex-1 justify-between md:h-[calc(100vh)] pt-16">
       <div className="mx-auto max-w-7xl w-full grow flex flex-col-reverse md:flex-row">
@@ -51,6 +47,7 @@ async function EventDetailPage({ params }: Props) {
                 <span>{res?.event_date.toLocaleDateString()}</span>
               </div>
             </div>
+            <InvitedList event_id={params.event_id} />
           </div>
         </div>
         <div className="shrink-0 md:flex-[0.75] bg-gradient-to-br from-blue-500 to-cyan-400 h-20 md:h-full" />

@@ -47,7 +47,7 @@ function EventDashboard({}: Props) {
                 new Date(a.created_at).getTime()
             )
             .map(({ event_id, event_name, location, description }) => (
-              <Card>
+              <Card key={event_id}>
                 <CardHeader className="flex flex-row items-center justify-between p-4">
                   <Link href={`events/${event_id}`}>
                     <CardTitle className="cursor-pointer">

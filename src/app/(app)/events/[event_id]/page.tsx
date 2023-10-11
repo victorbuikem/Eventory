@@ -25,12 +25,36 @@ async function EventDetailPage({ params }: Props) {
   //   `${process.env.NEXT_PUBLIC_SERVER_URL}api/rsvp?id=${params.event_id}`
   // );
   return (
-    <div className="flex flex-col-reverse md:flex-row flex-1 md:h-[651px] pt-16">
-      <div className="mx-auto max-w-7xl w-full grow lg:flex xl:px-2">
+    <div className="flex flex-col-reverse md:flex-row flex-1 justify-between md:h-[calc(100vh)] pt-16">
+      <div className="mx-auto max-w-7xl w-full grow flex flex-col-reverse md:flex-row">
         {/* Left Side */}
-        <div></div>
+        <div className="flex-1 xl:flex">
+          <div className="px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-4">
+            <div className="">
+              <div className="flex gap-2 items-center relative">
+                <Link href="/events" className="p-2 text-primary">
+                  <ArrowLeft size={20} />
+                </Link>
+                <h2 className="text-2xl font-semibold tracking-tight text-slate-800">
+                  {res?.event_name}
+                </h2>
+                <Link
+                  className="p-2 text-primary absolute right-0"
+                  href={`/edit/${params.event_id}`}
+                >
+                  <Edit />
+                </Link>
+              </div>
+
+              <div className="flex justify-between mt-2">
+                <span>{res?.location}</span>
+                <span>{res?.event_date.toLocaleDateString()}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="shrink-0 md:flex-[0.75] bg-gradient-to-br from-blue-500 to-cyan-400 h-20 md:h-full" />
       </div>
-      {params.event_id}{" "}
     </div>
   );
 }

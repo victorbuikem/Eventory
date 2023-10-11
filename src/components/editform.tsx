@@ -1,6 +1,13 @@
 "use client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { AtSign, Brush, FormInput, Hand, MessageCircle } from "lucide-react";
+import {
+  ArrowLeft,
+  AtSign,
+  Brush,
+  FormInput,
+  Hand,
+  MessageCircle,
+} from "lucide-react";
 import {
   Form,
   FormLabel,
@@ -10,11 +17,6 @@ import {
   FormMessage,
   FormDescription,
 } from "@/components/ui/form";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { RsvpFormLabelSchema } from "@/lib/schema";
 import { Input } from "@/components/ui/input";
@@ -40,6 +42,7 @@ import { Switch } from "./ui/switch";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import axios from "axios";
+import Link from "next/link";
 
 type Input = z.infer<typeof RsvpFormLabelSchema>;
 type Props = {
@@ -113,6 +116,13 @@ function EditForm({
 
   return (
     <div id="editor" className="p-4">
+      <Link
+        href={`/events/${event_id}`}
+        className="flex items-center gap-2 bg-stone-100 text-sm px-2 py-1 rounded-lg mb-2 w-20 hover:opacity-90 font-medium"
+      >
+        <ArrowLeft size={14} />
+        Events
+      </Link>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="">
           <Tabs defaultValue="event_labels" className="w-[500px]">
@@ -322,20 +332,7 @@ function EditForm({
                       <FormLabel>Primary Color</FormLabel>
                       <FormControl>
                         <div className="px-2 py-1 border flex items-center gap-2 rounded-xl h-12">
-                          <Popover>
-                            <PopoverTrigger>
-                              <div
-                                style={{ backgroundColor: field.value }}
-                                className="w-6 h-6 rounded-full"
-                              />
-                            </PopoverTrigger>
-                            <PopoverContent
-                              className="w-auto p-0"
-                              align="start"
-                            >
-                              <Input type="color" {...field} />
-                            </PopoverContent>
-                          </Popover>
+                          
                           <Input
                             className="border-none shadow-none text-xl uppercase focus-visible:ring-none"
                             {...field}

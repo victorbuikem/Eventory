@@ -162,6 +162,7 @@ function EventCreation({}: Props) {
               navigator.clipboard.writeText(
                 `${process.env.NEXT_PUBLIC_SERVER_URL}rsvp/${eventLink}`
               );
+              toast.success("Copied to Clipboard");
             }}
             className="bg-slate-200 h-8 w-8 rounded-full p-2 flex justify-center items-center"
           >

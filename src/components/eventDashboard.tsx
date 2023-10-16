@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button, buttonVariants } from "@/components/ui/button";
+import EventButton from "./eventButton"
 import Link from "next/link";
 import { trpc } from "@/app/_trpc/client";
 import { Loader2, Trash2 } from "lucide-react";
@@ -34,9 +35,7 @@ function EventDashboard({}: Props) {
     <section className="pt-16 mx-auto max-w-7xl md:px-10">
       <div className="flex justify-between items-end px-2">
         <h1 className="text-3xl font-bold mt-4">My Events</h1>
-        <Link className={buttonVariants({ variant: "default" })} href="create">
-          Create An Event
-        </Link>
+        <EventButton />
       </div>
       {events && events?.length !== 0 ? (
         <div className="grid md:grid-cols-3 gap-3 px-4 py-4 md:py-8">

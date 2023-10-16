@@ -43,6 +43,7 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import axios from "axios";
 import Link from "next/link";
+import { trpc } from "@/app/_trpc/client";
 
 type Input = z.infer<typeof RsvpFormLabelSchema>;
 type Props = {
@@ -84,27 +85,12 @@ function EditForm({
     },
   });
 
-  //React Mutation for Request
-  const { mutate: submitEventUpdate, isLoading } = useMutation({
-    mutationFn: async (input: Input) => {
-      const res = await axios.put(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}api/create`,
-        { ...input }
-      );
-      return res.data;
+  //TRPC Mutation for Request
+  const { mutate: submitEventUpdate } = trpc.editRsvpForm.useMutation({
+    onSuccess: () => {
+      toast.success("Yay! Updated Successfully");
     },
   });
-
-  function onSubmit(input: Input) {
-    submitEventUpdate(
-      { ...input },
-      {
-        onSuccess: () => {
-          toast.success("Yay! Updated Successfully 🎉");
-        },
-      }
-    );
-  }
 
   useEffect(() => {
     // getCurrentValue
@@ -112,7 +98,7 @@ function EditForm({
       set_rsvp_information(value)
     );
     return () => getCurrentValue.unsubscribe();
-  }, []);
+  }, [form, set_rsvp_information]);
 
   return (
     <div id="editor" className="p-4">
@@ -124,7 +110,12 @@ function EditForm({
         Events
       </Link>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="">
+        <form
+          onSubmit={form.handleSubmit((input: Input) => {
+            submitEventUpdate({ data: { ...input } });
+          })}
+          className=""
+        >
           <Tabs defaultValue="event_labels" className="w-[500px]">
             <TabsList className="grid w-full grid-cols-2">
               {/*Selecting between event details and form design */}
@@ -332,7 +323,6 @@ function EditForm({
                       <FormLabel>Primary Color</FormLabel>
                       <FormControl>
                         <div className="px-2 py-1 border flex items-center gap-2 rounded-xl h-12">
-                          
                           <Input
                             className="border-none shadow-none text-xl uppercase focus-visible:ring-none"
                             {...field}

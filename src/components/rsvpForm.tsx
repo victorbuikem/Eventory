@@ -1,7 +1,6 @@
 "use client";
 import z from "zod";
 import { useForm } from "react-hook-form";
-import { RsvpAcceptSchema } from "@/lib/schema";
 import {
   Card,
   CardHeader,
@@ -9,7 +8,6 @@ import {
   CardContent,
   CardDescription,
 } from "@/components/ui/card";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormField,
@@ -27,10 +25,10 @@ import {
 } from "./ui/select";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { useMutation } from "@tanstack/react-query";
 import ConfettiExplosion from "react-confetti-explosion";
-import axios from "axios";
 import { useState } from "react";
+import { trpc } from "@/app/_trpc/client";
+import { toast } from "sonner";
 /*Types */
 type Props = {
   slug: string;
@@ -46,8 +44,6 @@ type Props = {
   email_address_display: boolean | undefined;
 };
 
-type Input = z.infer<typeof RsvpAcceptSchema>;
-
 function RsvpForm({
   slug,
   title,
@@ -60,53 +56,18 @@ function RsvpForm({
   your_name_placeholder,
   email_address_placeholder,
   email_address_display,
-
 }: Props) {
   const [success, setSucess] = useState(false);
-  const form = useForm<Input>({
-    resolver: zodResolver(RsvpAcceptSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      attending: undefined,
-      event_id: slug,
+  const form = useForm();
+
+  const { mutate: acceptEvent, isLoading } = trpc.acceptRsvpForm.useMutation({
+    onSuccess: () => {
+      setSucess(true);
+    },
+    onError: () => {
+      toast.error("Something went Wrong");
     },
   });
-
-  const { mutate: createEvent, isLoading } = useMutation({
-    mutationFn: async ({ name, email, event_id, attending }: Input) => {
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}api/rsvp`,
-        {
-          name,
-          email,
-          event_id,
-          attending,
-        }
-      );
-      return res.data;
-    },
-  });
-
-  /*Submit Functionality */
-  function onSubmit(input: Input) {
-    createEvent(
-      {
-        name: input.name,
-        email: input.email,
-        attending: input.attending,
-        event_id: slug,
-      },
-      {
-        onSuccess: () => {
-          setSucess(true);
-        },
-        onError: () => {
-          alert("Something went wrong");
-        },
-      }
-    );
-  }
 
   return (
     <div className="min-h-full">
@@ -127,10 +88,14 @@ function RsvpForm({
             </CardHeader>
             <CardContent>
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)}>
+                <form
+                  onSubmit={form.handleSubmit((input) => {
+                    setSucess(false);
+                    acceptEvent({ data: { ...input, slug } });
+                  })}
+                >
                   {your_name_display && (
                     <FormField
-                      control={form.control}
                       name="name"
                       render={({ field }) => (
                         <FormItem>
@@ -138,6 +103,7 @@ function RsvpForm({
                           <FormControl>
                             <Input
                               placeholder={your_name_placeholder}
+                              required
                               {...field}
                             />
                           </FormControl>
@@ -148,14 +114,15 @@ function RsvpForm({
                   )}
                   {email_address_display && (
                     <FormField
-                      control={form.control}
                       name="email"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>{email_address_label}</FormLabel>
                           <FormControl>
                             <Input
+                              type="email"
                               placeholder={email_address_placeholder}
+                              required
                               {...field}
                             />
                           </FormControl>
@@ -164,8 +131,29 @@ function RsvpForm({
                       )}
                     />
                   )}
+
+                  {/* {custom_input.map((value) => (
+                    <FormField
+                      key={value.id}
+                      name={value.id}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{value.label}</FormLabel>
+                          <FormControl>
+                            <Input
+                              type={value.type}
+                              placeholder=",wmsnczk"
+                              required={value.required}
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  ))} */}
+
                   <FormField
-                    control={form.control}
                     name="attending"
                     render={({ field }) => (
                       <FormItem>

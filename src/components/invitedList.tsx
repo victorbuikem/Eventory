@@ -12,7 +12,6 @@ function InvitedList({ event_id }: Props) {
   const { data: invitedRes, isLoading } = trpc.getInvitedResponse.useQuery({
     event_id,
   });
-  console.log(invitedRes);
 
   return (
     <div className="mt-4">

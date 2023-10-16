@@ -22,7 +22,7 @@ async function EventDetailPage({ params }: Props) {
 
   return (
     <div className="flex flex-col-reverse md:flex-row flex-1 justify-between md:h-[calc(100vh)] pt-16">
-      <div className="mx-auto max-w-7xl w-full grow flex flex-col-reverse md:flex-row">
+      <div className="mx-auto max-w-full w-full grow flex flex-col-reverse md:flex-row">
         {/* Left Side */}
         <div className="flex-1 xl:flex">
           <div className="px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-4">
@@ -42,7 +42,7 @@ async function EventDetailPage({ params }: Props) {
                 </Link>
               </div>
 
-              <div className="flex justify-between mt-2">
+              <div className="flex flex-col md:flex-row justify-between mt-2">
                 <span>{res?.location}</span>
                 <span>{res?.event_date.toLocaleDateString()}</span>
               </div>

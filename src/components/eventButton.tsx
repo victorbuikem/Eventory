@@ -1,13 +1,7 @@
 "use client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { useState } from "react";
+import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
+import { Button } from "./ui/button";
 import {
   Form,
   FormLabel,
@@ -16,79 +10,85 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { useForm } from "react-hook-form";
+import { ArrowLeft, Copy, Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 import { eventCreationSchema } from "@/lib/schema";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
-import { toast } from "sonner";
+import { useForm } from "react-hook-form";
+import { Input } from "./ui/input";
+import { trpc } from "@/app/_trpc/client";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { ArrowLeft, Copy } from "lucide-react";
-import Link from "next/link";
 
-/*Types */
-type Input = z.infer<typeof eventCreationSchema>;
 type Props = {};
 
-function EventCreation({}: Props) {
-  const [eventLink, setEventLink] = useState<string>();
-  const [created, setCreated] = useState(false);
+function EventButton({}: Props) {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <Dialog
+      open={isOpen}
+      onOpenChange={(v) => {
+        if (!v) {
+          setIsOpen(v);
+        }
+      }}
+    >
+      <DialogTrigger asChild onClick={() => setIsOpen(true)}>
+        <Button className="">Create An Event</Button>
+      </DialogTrigger>
+      <DialogContent>
+        <EventCreationForm />
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+export default EventButton;
+
+/*===========================*/
+
+type Input = z.infer<typeof eventCreationSchema>;
+
+function EventCreationForm() {
   const router = useRouter();
+  const [created, setCreated] = useState(false);
   const form = useForm<Input>({
     resolver: zodResolver(eventCreationSchema),
     defaultValues: {
       name: "",
       location: "",
-      eventDate: new Date(),
+      event_date: new Date(),
       publicEvent: false,
     },
   });
 
-  const { mutate: setCreation, isLoading } = useMutation({
-    mutationFn: async ({ name, location, eventDate }: Input) => {
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}api/create`,
-        {
-          name,
-          location,
-          eventDate,
-        }
-      );
-      return res.data;
+  const { mutate: createNewEvent, isLoading } = trpc.createEvent.useMutation({
+    onSuccess: ({ eventId }) => {
+      setCreated(true);
+      toast.success("Yay! Your event link 🎉");
+      router.push(`/edit/${eventId}`);
     },
   });
-  function onSubmit(input: Input) {
-    setCreation(
-      {
-        name: input.name,
-        location: input.location,
-        eventDate: input.eventDate,
-      },
-      {
-        onSuccess: ({ eventId }) => {
-          setEventLink(eventId);
-          setCreated(true);
-          toast.success("Yay! Your event link 🎉");
-        },
-      }
-    );
-  }
-
   return (
-    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-      <Card className="w-[425px]">
-        <CardHeader>
-          <Link href="events">
-            <ArrowLeft size={20} />
-          </Link>
-          <CardTitle>New Event</CardTitle>
-          <CardDescription>Create New Event</CardDescription>
-        </CardHeader>
-        <CardContent>
+    <>
+      <div className="max-w-[400px] relative p-1">
+        <div>
+          <h3 className="font-semibold leading-none tracking-tight">
+            Create New Event
+          </h3>
+        </div>
+        <div>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="">
+            <form
+              onSubmit={form.handleSubmit((input: Input) => {
+                createNewEvent({
+                  name: input.name,
+                  event_date: input.event_date,
+                  location: input.location,
+                });
+              })}
+              className=""
+            >
               <FormField
                 control={form.control}
                 name="name"
@@ -115,13 +115,13 @@ function EventCreation({}: Props) {
                     <FormControl>
                       <Input placeholder="A location" {...field} />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-red-400" />
                   </FormItem>
                 )}
               />
               <FormField
                 control={form.control}
-                name="eventDate"
+                name="event_date"
                 render={({ field }) => {
                   return (
                     <FormItem className="flex flex-col mt-2">
@@ -134,11 +134,7 @@ function EventCreation({}: Props) {
                 }}
               />
 
-              <Button
-                disabled={isLoading || created}
-                className="w-full mt-4 text-md font-medium"
-                type="submit"
-              >
+              <Button className="w-full mt-4 text-md font-medium" type="submit">
                 {isLoading ? (
                   <div className="flex space-x-2 animate-pulse">
                     <div className="h-2 w-2 rounded-full bg-white animate-[bounce_3s_infinite]" />
@@ -151,16 +147,27 @@ function EventCreation({}: Props) {
               </Button>
             </form>
           </Form>
-        </CardContent>
-      </Card>
-      {created && (
-        <div className="bg-slate-100 flex items-center rounded-2xl justify-between gap-2 p-2 mt-4">
-          <span>{`${process.env.NEXT_PUBLIC_SERVER_URL}rsvp/${eventLink}`}</span>
+        </div>
+        {created ? (
+          <div className="bg-gray-300/10 w-full h-full absolute top-0 p-2 flex items-center justify-center gap-2">
+            <Loader2 className="animate-spin h-6 w-6" />
+            <span>Redirecting...</span>
+          </div>
+        ) : null}
+      </div>
+    </>
+  );
+}
+
+/**
+ * {true ? (
+        <div className="bg-slate-100/75 flex items-center rounded-2xl justify-between gap-2 p-2 mt-4">
+          <span>{`${process.env.NEXT_PUBLIC_SERVER_URL}rsvp/lrefm,dnmernfdkne`}</span>
           <button
             title="Click to Copy"
             onClick={() => {
               navigator.clipboard.writeText(
-                `${process.env.NEXT_PUBLIC_SERVER_URL}rsvp/${eventLink}`
+                `${process.env.NEXT_PUBLIC_SERVER_URL}rsvp/lrefm,dnmernfdkne`
               );
               toast.success("Copied to Clipboard");
             }}
@@ -169,9 +176,5 @@ function EventCreation({}: Props) {
             <Copy />
           </button>
         </div>
-      )}
-    </div>
-  );
-}
-
-export default EventCreation;
+      ) : null}
+ */

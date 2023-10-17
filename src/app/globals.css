@@ -75,13 +75,6 @@
   }
 }
 
-.color-picker {
-  background: linear-gradient(#ffffff00, #000000ff),
-    linear-gradient(0.25turn, #ffffffff, #00000000), var(--color-bg);
-}
-
-.color-slider {
-  --gradient: #ff0000, #ffff00 17.2%, #ffff00 18.2%, #00ff00 33.3%,
-    #00ffff 49.5%, #00ffff 51.5%, #0000ff 67.7%, #ff00ff 83.3%, #ff0000;
-  background: linear-gradient(var(--gradient));
+.custom-color {
+  background-color: var(--bg_form, green);
 }

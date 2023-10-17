@@ -48,13 +48,12 @@ import { trpc } from "@/app/_trpc/client";
 type Input = z.infer<typeof RsvpFormLabelSchema>;
 type Props = {
   event_id: string;
-  set_rsvp_information: Dispatch<SetStateAction<any>>;
   init_rsvp_information: any;
+  iFrameRef: any;
 };
 
 function EditForm({
   event_id,
-  set_rsvp_information,
   init_rsvp_information: {
     form_title,
     primary_color,
@@ -66,6 +65,7 @@ function EditForm({
     submit_invite_label,
     description,
   },
+  iFrameRef,
 }: Props) {
   const form = useForm<Input>({
     resolver: zodResolver(RsvpFormLabelSchema),
@@ -94,11 +94,14 @@ function EditForm({
 
   useEffect(() => {
     // getCurrentValue
-    const getCurrentValue = form.watch((value, { name, type }) =>
-      set_rsvp_information(value)
-    );
+    const getCurrentValue = form.watch((value, { name, type }) => {
+      iFrameRef.current.contentWindow.postMessage(
+        value,
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/rsvp/${event_id}?preview=true`
+      );
+    });
     return () => getCurrentValue.unsubscribe();
-  }, [form, set_rsvp_information]);
+  }, [form, iFrameRef, event_id]);
 
   return (
     <div id="editor" className="p-4">
@@ -116,7 +119,7 @@ function EditForm({
           })}
           className=""
         >
-          <Tabs defaultValue="event_labels" className="w-[500px]">
+          <Tabs defaultValue="event_labels" className="">
             <TabsList className="grid w-full grid-cols-2">
               {/*Selecting between event details and form design */}
               <TabsTrigger value="event_labels">
@@ -149,7 +152,7 @@ function EditForm({
                           <FormLabel>Form Title</FormLabel>
                           <FormControl>
                             <Input
-                              placeholder="Your Title Goes  Here"
+                              placeholder="Your Title Goes Here"
                               {...field}
                             />
                           </FormControl>

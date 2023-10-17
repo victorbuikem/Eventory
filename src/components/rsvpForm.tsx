@@ -26,9 +26,10 @@ import {
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import ConfettiExplosion from "react-confetti-explosion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { trpc } from "@/app/_trpc/client";
 import { toast } from "sonner";
+import { useSearchParams } from "next/navigation";
 /*Types */
 type Props = {
   slug: string;
@@ -57,6 +58,9 @@ function RsvpForm({
   email_address_placeholder,
   email_address_display,
 }: Props) {
+  const searchparam = useSearchParams();
+  const preview = searchparam.get("preview");
+  const [previewData, setPreviewData] = useState<any>();
   const [success, setSucess] = useState(false);
   const form = useForm();
 
@@ -68,10 +72,32 @@ function RsvpForm({
       toast.error("Something went Wrong");
     },
   });
+  useEffect(() => {
+    // Create a function to handle the incoming messages
+    const handleMessage = (event: any) => {
+      // Verify the origin of the message to ensure it's from a trusted source
+      if (event.origin !== process.env.NEXT_PUBLIC_SERVER_URL) {
+        return;
+      }
+
+      const data = event.data;
+
+      // Do something with the data from the parent window
+      setPreviewData((prev: any) => data);
+    };
+
+    // Add an event listener to the window to handle messages
+    window.addEventListener("message", handleMessage);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener("message", handleMessage);
+    };
+  }, []);
 
   return (
     <div className="min-h-full">
-      <div className="flex flex-1">
+      <div className="flex flex-col-reverse md:flex-row md:flex-1 ">
         {success && (
           <ConfettiExplosion
             duration={3000}
@@ -80,11 +106,16 @@ function RsvpForm({
             force={0.9}
           />
         )}
-        <main className="flex flex-col items-center justify-center flex-1 flex-shrink-0 px-5 pt-16 pb-8 border-r shadow-lg h-screen bg-slate-100">
-          <Card className="w-[425px] relative">
+        <main className="flex flex-col items-center justify-center flex-1 flex-shrink-0 px-1 md:px-5 pt-16 pb-8 border-r shadow-lg h-screen bg-slate-100">
+          <Card className="w-full md:w-[425px] relative">
+            {preview ? (
+              <div className="absolute w-full md:w-[425px] h-full bg-black/0" />
+            ) : null}
             <CardHeader>
-              <CardTitle>{title}</CardTitle>
-              <CardDescription>{description}</CardDescription>
+              <CardTitle>{preview ? previewData.form_title : title}</CardTitle>
+              <CardDescription>
+                {preview ? previewData.description : description}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <Form {...form}>
@@ -94,7 +125,26 @@ function RsvpForm({
                     acceptEvent({ data: { ...input, slug } });
                   })}
                 >
-                  {your_name_display && (
+                  {preview && previewData.your_name_disply && (
+                    <FormField
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{previewData.your_name_label}</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder={previewData.your_name_placeholder}
+                              required
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+
+                  {!preview && your_name_display && (
                     <FormField
                       name="name"
                       render={({ field }) => (
@@ -112,7 +162,8 @@ function RsvpForm({
                       )}
                     />
                   )}
-                  {email_address_display && (
+
+                  {!preview && email_address_display && (
                     <FormField
                       name="email"
                       render={({ field }) => (
@@ -122,6 +173,28 @@ function RsvpForm({
                             <Input
                               type="email"
                               placeholder={email_address_placeholder}
+                              required
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                  {preview && previewData.email_address_display && (
+                    <FormField
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>
+                            {previewData.email_address_label}
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder={
+                                previewData.email_address_placeholder
+                              }
                               required
                               {...field}
                             />
@@ -182,8 +255,14 @@ function RsvpForm({
                   />
                   <Button
                     type="submit"
-                    className="w-full mt-4 tracking-tight leading-none text-lg"
-                    style={{ backgroundColor: primaryColor }}
+                    className={`w-full mt-4 tracking-tight leading-none text-lg custom-color hover:opacity-80`}
+                    style={
+                      {
+                        "--bg_form": preview
+                          ? previewData.primary_color
+                          : primaryColor,
+                      } as React.CSSProperties
+                    }
                   >
                     {isLoading ? (
                       <div className="flex space-x-2 animate-pulse">
@@ -208,8 +287,12 @@ function RsvpForm({
           </Card>
         </main>
         <div
-          style={{ backgroundColor: primaryColor }}
-          className="basis-[40%]"
+          style={
+            {
+              "--bg_form": preview ? previewData.primary_color : primaryColor,
+            } as React.CSSProperties
+          }
+          className="h-[138px] md:h-screen md:basis-[40%] custom-color"
         />
       </div>
     </div>

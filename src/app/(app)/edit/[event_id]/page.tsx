@@ -15,7 +15,7 @@ async function EventEditPage({ params }: Props) {
   });
 
   return (
-    <div className="pt-16 flex flex-row flex-1 min-h-[651px] h-screen">
+    <div className="pt-16 flex flex-row flex-1 min-h-[651px] h-screen max-h-fit">
       <ClientScreen params={params} rsvp_information={res?.RsvpForm[0]} />
     </div>
   );

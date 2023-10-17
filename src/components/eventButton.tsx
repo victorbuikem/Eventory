@@ -158,23 +158,3 @@ function EventCreationForm() {
     </>
   );
 }
-
-/**
- * {true ? (
-        <div className="bg-slate-100/75 flex items-center rounded-2xl justify-between gap-2 p-2 mt-4">
-          <span>{`${process.env.NEXT_PUBLIC_SERVER_URL}rsvp/lrefm,dnmernfdkne`}</span>
-          <button
-            title="Click to Copy"
-            onClick={() => {
-              navigator.clipboard.writeText(
-                `${process.env.NEXT_PUBLIC_SERVER_URL}rsvp/lrefm,dnmernfdkne`
-              );
-              toast.success("Copied to Clipboard");
-            }}
-            className="bg-slate-200 h-8 w-8 rounded-full p-2 flex justify-center items-center"
-          >
-            <Copy />
-          </button>
-        </div>
-      ) : null}
- */

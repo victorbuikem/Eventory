@@ -75,7 +75,7 @@ export const appRouter = router({
 
       const res = await prisma.rsvp.create({
         data: {
-          invite_name: data.name,
+          invite_name: data.name || "",
           invite_email: data.email,
           event_id: data.slug,
           attending: data.attending,

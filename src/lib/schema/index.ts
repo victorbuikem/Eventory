@@ -11,8 +11,8 @@ export const eventCreationSchema = z.object({
 });
 
 export const RsvpAcceptSchema = z.object({
-  name: z.string().min(4).max(73),
-  email: z.string().email("Enter a Valid Email"),
+  name: z.string().min(4).max(73).optional(),
+  email: z.string().email("Enter a Valid Email").optional(),
   event_id: z.string(),
   attending: z.enum(["going", "not_going", "not_sure"]),
 });

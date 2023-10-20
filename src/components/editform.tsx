@@ -98,7 +98,7 @@ function EditForm({ event_id, init_rsvp_information, iFrameRef }: Props) {
     const getCurrentValue = form.watch((value, { name, type }) => {
       iFrameRef.current.contentWindow.postMessage(
         value,
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/rsvp/${event_id}`
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/rsvp/${event_id}?preview=true`
       );
     });
     return () => getCurrentValue.unsubscribe();

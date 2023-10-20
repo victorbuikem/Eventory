@@ -60,7 +60,18 @@ function RsvpForm({
 }: Props) {
   const searchparam = useSearchParams();
   const preview = searchparam.get("preview");
-  const [previewData, setPreviewData] = useState<any>();
+  const [previewData, setPreviewData] = useState<any>({
+    form_title: title,
+    description,
+    your_name_label,
+    buttonLabel,
+    email_address_label,
+    primary_color: primaryColor,
+    your_name_disply: your_name_display,
+    your_name_placeholder,
+    email_address_placeholder,
+    email_address_display,
+  });
   const [success, setSucess] = useState(false);
   const form = useForm();
 
@@ -75,13 +86,13 @@ function RsvpForm({
   useEffect(() => {
     // Create a function to handle the incoming messages
     const handleMessage = (event: any) => {
+      console.log(event);
       // Verify the origin of the message to ensure it's from a trusted source
       if (event.origin !== process.env.NEXT_PUBLIC_SERVER_URL) {
         return;
       }
 
       const data = event.data;
-
       // Do something with the data from the parent window
       setPreviewData((prev: any) => data);
     };
@@ -206,25 +217,25 @@ function RsvpForm({
                   )}
 
                   {/* {custom_input.map((value) => (
-                    <FormField
-                      key={value.id}
-                      name={value.id}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{value.label}</FormLabel>
-                          <FormControl>
-                            <Input
-                              type={value.type}
-                              placeholder=",wmsnczk"
-                              required={value.required}
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  ))} */}
+                   <FormField
+                     key={value.id}
+                     name={value.id}
+                     render={({ field }) => (
+                       <FormItem>
+                         <FormLabel>{value.label}</FormLabel>
+                         <FormControl>
+                           <Input
+                             type={value.type}
+                            placeholder=",wmsnczk"
+                             required={value.required}
+                             {...field}
+                           />
+                         </FormControl>
+                         <FormMessage />
+                       </FormItem>
+                     )}
+                   />
+                     ))} */}
 
                   <FormField
                     name="attending"
@@ -300,3 +311,6 @@ function RsvpForm({
 }
 
 export default RsvpForm;
+
+/*
+ */

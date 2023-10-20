@@ -9,10 +9,25 @@ type Props = {
   params: {
     event_id: string;
   };
-  rsvp_information: any;
+  rsvp_information:
+    | {
+        form_id: string;
+        form_title: string;
+        primary_color: string;
+        font: string;
+        logo: string | null;
+        your_name_disply: boolean;
+        your_name_label: string;
+        your_name_placeholder: string;
+        email_address_display: boolean;
+        email_address_label: string;
+        email_address_placeholder: string;
+        submit_invite_label: string;
+        description: string;
+      }
+    | undefined;
 };
 function ClientScreen({ params, rsvp_information }: Props) {
-  const [test_state, set_test_state] = useState<any>(rsvp_information);
   const [screenView, setScreenView] = useState(true);
   const previewIframeRef = useRef<any>(null);
   return (
@@ -21,7 +36,7 @@ function ClientScreen({ params, rsvp_information }: Props) {
         <EditForm
           {...params}
           iFrameRef={previewIframeRef}
-          init_rsvp_information={...rsvp_information}
+          init_rsvp_information={rsvp_information}
         />
       </section>
       <section className="w-3/5 bg-sky-600/10 hidden md:flex items-center flex-col overflow-y-scroll p-8 pb-12 h-full">

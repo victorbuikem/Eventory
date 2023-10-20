@@ -31,7 +31,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { useEffect } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -39,49 +39,50 @@ import {
   AccordionTrigger,
 } from "./ui/accordion";
 import { Switch } from "./ui/switch";
-import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import axios from "axios";
 import Link from "next/link";
 import { trpc } from "@/app/_trpc/client";
 
 type Input = z.infer<typeof RsvpFormLabelSchema>;
 type Props = {
   event_id: string;
-  init_rsvp_information: any;
+  init_rsvp_information:
+    | {
+        form_id: string;
+        form_title: string;
+        primary_color: string;
+        font: string;
+        logo: string | null;
+        your_name_disply: boolean;
+        your_name_label: string;
+        your_name_placeholder: string;
+        email_address_display: boolean;
+        email_address_label: string;
+        email_address_placeholder: string;
+        submit_invite_label: string;
+        description: string;
+      }
+    | undefined;
   iFrameRef: any;
 };
 
-function EditForm({
-  event_id,
-  init_rsvp_information: {
-    form_title,
-    primary_color,
-    font,
-    your_name_label,
-    your_name_placeholder,
-    email_address_label,
-    email_address_placeholder,
-    submit_invite_label,
-    description,
-  },
-  iFrameRef,
-}: Props) {
+function EditForm({ event_id, init_rsvp_information, iFrameRef }: Props) {
   const form = useForm<Input>({
     resolver: zodResolver(RsvpFormLabelSchema),
     defaultValues: {
       form_id: event_id,
-      form_title,
-      description,
-      your_name_label,
-      your_name_disply: true,
-      your_name_placeholder,
-      email_address_label,
-      email_address_display: true,
-      email_address_placeholder,
-      primary_color,
-      submit_invite_label,
-      font,
+      form_title: init_rsvp_information?.form_title,
+      description: init_rsvp_information?.description,
+      your_name_label: init_rsvp_information?.your_name_label,
+      your_name_disply: init_rsvp_information?.your_name_disply,
+      your_name_placeholder: init_rsvp_information?.your_name_placeholder,
+      email_address_label: init_rsvp_information?.email_address_label,
+      email_address_display: init_rsvp_information?.email_address_display,
+      email_address_placeholder:
+        init_rsvp_information?.email_address_placeholder,
+      primary_color: init_rsvp_information?.primary_color,
+      submit_invite_label: init_rsvp_information?.submit_invite_label,
+      font: init_rsvp_information?.font,
     },
   });
 
@@ -97,7 +98,7 @@ function EditForm({
     const getCurrentValue = form.watch((value, { name, type }) => {
       iFrameRef.current.contentWindow.postMessage(
         value,
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/rsvp/${event_id}?preview=true`
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/rsvp/${event_id}`
       );
     });
     return () => getCurrentValue.unsubscribe();

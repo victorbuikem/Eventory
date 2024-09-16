@@ -1,6 +1,6 @@
 import { lucia } from '$lib/server/auth.js';
-import { json } from '@sveltejs/kit';
-import db from '$lib/prisma.js';
+import { json, redirect } from '@sveltejs/kit';
+import db from '$lib/server/prisma.js';
 import { verify } from '@node-rs/argon2';
 
 export const POST = async ({ locals, cookies, request }) => {
@@ -32,7 +32,8 @@ export const POST = async ({ locals, cookies, request }) => {
 			}
 		);
 	}
-
+	await lucia.invalidateUserSessions(user.id);
+	await lucia.deleteExpiredSessions();
 	const session = await lucia.createSession(user.id, {});
 	const sessionCookie = lucia.createSessionCookie(session.id);
 
@@ -41,5 +42,5 @@ export const POST = async ({ locals, cookies, request }) => {
 		...sessionCookie.attributes
 	});
 
-	return json({ success: true });
+	return redirect(302, '/');
 };

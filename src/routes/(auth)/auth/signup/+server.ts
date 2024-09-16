@@ -1,5 +1,5 @@
-import { error, json } from '@sveltejs/kit';
-import db from '$lib/prisma.js';
+import { error, json, redirect } from '@sveltejs/kit';
+import db from '$lib/server/prisma.js';
 import { lucia } from '$lib/server/auth.js';
 import { hash } from '@node-rs/argon2';
 import * as z from 'zod';
@@ -44,5 +44,5 @@ export const POST = async ({ locals, request, cookies }) => {
 		...sessionCookie.attributes
 	});
 
-	return json({ success: true });
+	return redirect(302, '/');
 };

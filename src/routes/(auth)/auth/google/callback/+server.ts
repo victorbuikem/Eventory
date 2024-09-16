@@ -1,10 +1,8 @@
+import db from '$lib/server/prisma.js';
 import { google, lucia } from '$lib/server/auth.js';
-import { error, json, redirect } from '@sveltejs/kit';
-import db from '$lib/prisma.js';
-import { OAuth2RequestError } from 'arctic';
+import { error, redirect } from '@sveltejs/kit';
 
 export const GET = async ({ url, cookies, fetch }) => {
-	//http://localhost:6100/auth/google/callback?state=uFuj8Xrcds7P3HN3glQBakRSw9P73V5q-4fVzBWGPIo&code=4%2F0AQlEd8wSKAIwWZjLZpI-JiIY4xu-RJA12d8DM9piIrj2osbCI_p65ioZ4d-sbeXMt5hmnw&scope=openid&authuser=1&prompt=consent
 	const state = url.searchParams.get('state');
 	const code = url.searchParams.get('code');
 	const userState = cookies.get('google_state');

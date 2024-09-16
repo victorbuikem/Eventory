@@ -2,7 +2,7 @@ import { dev } from '$app/environment';
 import { Lucia } from 'lucia';
 import { Google } from 'arctic';
 import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } from '$env/static/private';
-import db from '../prisma';
+import db from './prisma';
 import { PrismaAdapter } from '@lucia-auth/adapter-prisma';
 
 const adapter = new PrismaAdapter(db.session, db.user);

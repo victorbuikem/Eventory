@@ -44,6 +44,7 @@
 		"bits-ui": "^0.21.13",
 		"clsx": "^2.1.1",
 		"postgres": "^3.4.4",
+		"svelte-radix": "^1.1.1",
 		"tailwind-merge": "^2.5.2",
 		"tailwind-variants": "^0.2.1"
 	}

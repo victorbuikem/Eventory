@@ -5,6 +5,6 @@
 	const { children, data } = $props();
 </script>
 
-<!-- <OnboardingModal user={data.user} /> -->
+<OnboardingModal user={data.user} />
 <Topbar user={data.user} />
 {@render children()}

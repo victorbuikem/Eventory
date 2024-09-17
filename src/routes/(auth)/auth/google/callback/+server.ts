@@ -7,7 +7,8 @@ export const GET = async ({ url, cookies, fetch }) => {
 	const code = url.searchParams.get('code');
 	const userState = cookies.get('google_state');
 	const userCodeVerifier = cookies.get('google_code');
-	if (!code || !state || !userState || !userCodeVerifier) {
+
+	if (!code || !state || !userState || !userCodeVerifier || state !== userState) {
 		return error(400, { message: 'Invalid Credentials' });
 	}
 
@@ -18,7 +19,9 @@ export const GET = async ({ url, cookies, fetch }) => {
 		}
 	});
 	const googleUser = await googleResponse.json();
-	const existing_user = await db.user.findUnique({ where: { email: googleUser.email } });
+	const existing_user = await db.user.findUnique({
+		where: { email: googleUser.email }
+	});
 
 	if (existing_user) {
 		await lucia.invalidateUserSessions(existing_user.id);

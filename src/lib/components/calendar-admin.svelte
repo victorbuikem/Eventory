@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { Calendar as CalendarPrimitive } from 'bits-ui';
-	import * as Calendar from './ui/calendar/index.js';
 	import { cn } from '$lib/utils.js';
-	import Button from './ui/button/button.svelte';
+	import { Calendar as CalendarPrimitive } from 'bits-ui';
+	import NewEventModal from './new-event-modal.svelte';
+	import CalendarDay from './ui/calendar/calendar-day-admin.svelte';
+	import * as Calendar from './ui/calendar/index.js';
 
 	type $$Props = CalendarPrimitive.Props;
 	type $$Events = CalendarPrimitive.Events;
@@ -45,11 +46,11 @@
 						/>
 					</div>
 					<div class="w-px h-6 ml-4 bg-gray-600"></div>
-					<Button class="ml-4">Create Event</Button>
+					<NewEventModal />
 				</div>
 			</div>
 		</Calendar.Header>
-		<Calendar.Months class="relative mt-0 space-y-0">
+		<Calendar.Months class="relative mt-0 space-y-0 mx-auto">
 			<div class="absolute inset-0 z-10"></div>
 			{#each months as month}
 				<Calendar.Grid>
@@ -69,16 +70,16 @@
 							<Calendar.GridRow class="mt-2 w-full grid grid-cols-7 gap-px ">
 								{#each weekDates as date}
 									<Calendar.Cell
-										class="h-[90px] bg-gray-200 text-left p-1 [&:has([data-outside-month])]:bg-accent/50"
+										class="h-[90px] relative py-2 px-3 bg-gray-200 text-left p-1 [&:has([data-outside-month])]:bg-accent/50"
 										{date}
 									>
-										<Calendar.Day class="" {date} month={month.value}>
+										<CalendarDay class="" {date} month={month.value}>
 											<ol>
 												<li>Event 1</li>
 												<li>Event 2</li>
 												<!-- <li>Event 3</li -->
 											</ol>
-										</Calendar.Day>
+										</CalendarDay>
 										<!-- <div>
 											{date.day}
 											<ol>

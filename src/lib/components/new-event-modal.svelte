@@ -12,11 +12,15 @@
 	let title = '';
 	let location = '';
 
-	const handleSubmit = () => {
+	const handleSubmit = async () => {
 		if (!date) return;
 		// Format Date String
 		const formattedDate = new Date(date.year, date.month, date.day, hour, minute);
-		alert(JSON.stringify({ title, location, date: formattedDate }));
+		let res = await fetch('/api/event', {
+			method: 'POST',
+			body: JSON.stringify({ title, location, date: formattedDate })
+		});
+		let data = await res.json();
 	};
 </script>
 

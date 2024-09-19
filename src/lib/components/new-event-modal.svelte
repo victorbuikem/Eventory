@@ -5,6 +5,7 @@
 	import * as Dialog from './ui/dialog/index';
 	import DateTimeInput from './ui/input/date-time-input.svelte';
 	import Input from './ui/input/input.svelte';
+	import { cn } from '$lib/utils';
 
 	let date: DateValue | undefined = undefined;
 	let hour: number = 0;
@@ -22,10 +23,23 @@
 		});
 		let data = await res.json();
 	};
+
+	export let triggerVariant:
+		| 'link'
+		| 'default'
+		| 'destructive'
+		| 'outline'
+		| 'secondary'
+		| 'ghost'
+		| undefined = 'default';
+	export let variantClass = '';
 </script>
 
 <Dialog.Root>
-	<Dialog.Trigger class={buttonVariants({ class: 'ml-4' })}>Create Event</Dialog.Trigger>
+	<Dialog.Trigger
+		class={buttonVariants({ class: cn('ml-4', variantClass), variant: triggerVariant })}
+		>Create Event</Dialog.Trigger
+	>
 	<Dialog.Content showX>
 		<div class="max-w-[400px] relative p-1">
 			<div>

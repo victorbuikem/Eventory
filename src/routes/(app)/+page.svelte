@@ -77,7 +77,6 @@
 		</div>
 	</Calendar.Header>
 	<div class="relative shadow ring-1 ring-black ring-opacity-5 lg:flex lg:flex-auto lg:flex-col">
-		<!-- <div class="absolute inset-0 z-10"></div> -->
 		{#each months as month}
 			<div
 				class="grid grid-cols-7 gap-px border-b border-gray-300 bg-gray-200 text-center text-xs font-semibold leading-6 text-gray-700 lg:flex-none"
@@ -494,37 +493,3 @@
 		</ol>
 	</div>
 </CalendarPrimitive.Root>
-
-<!-- <div class="">
-	
-		<Calendar.Months class="relative mt-0 space-y-0 mx-auto">
-			{#each months as month}
-				<Calendar.Grid>
-					
-					<Calendar.GridBody>
-						{#each month.weeks as weekDates}
-							<Calendar.GridRow class="mt-2 w-full grid grid-cols-7 gap-px ">
-								{#each weekDates as date}
-									<Calendar.Cell
-										class="h-[90px] relative py-2 px-3 bg-gray-200 text-left p-1 [&:has([data-outside-month])]:bg-accent/50"
-										{date}
-									>
-										<CalendarDay class="" {date} month={month.value}>
-											<ol class="h-10 overflow-hidden">
-												{#each data.events as event}
-													{#if event.month === date.month && event.day === date.day}
-														<li class="truncate">{event.title}</li>
-													{/if}
-												{/each}
-											</ol>
-										</CalendarDay>
-									</Calendar.Cell>
-								{/each}
-							</Calendar.GridRow>
-						{/each}
-					</Calendar.GridBody>
-				</Calendar.Grid>
-			{/each}
-		</Calendar.Months>
-	</CalendarPrimitive.Root>
-</div> -->

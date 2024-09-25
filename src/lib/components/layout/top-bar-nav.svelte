@@ -43,7 +43,7 @@
 					<Button variant="ghost" builders={[builder]} class="relative h-8 w-8 rounded-full">
 						<Avatar.Root class="h-8 w-8">
 							<Avatar.Image src={user?.image} alt="@shadcn" />
-							<Avatar.Fallback>{user?.name.slice(0, 2) ?? user?.id}</Avatar.Fallback>
+							<Avatar.Fallback>{user?.name ? user?.name.slice(0, 2) : user?.id}</Avatar.Fallback>
 						</Avatar.Root>
 					</Button>
 				</DropdownMenu.Trigger>

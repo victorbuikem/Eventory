@@ -5,6 +5,10 @@
 	const { children, data } = $props();
 </script>
 
-<OnboardingModal user={data.user} />
-<Topbar user={data.user} />
-{@render children()}
+<div class="h-full relative">
+	<OnboardingModal user={data.user} />
+	{#if data.user}
+		<Topbar user={data.user} />
+	{/if}
+	{@render children()}
+</div>

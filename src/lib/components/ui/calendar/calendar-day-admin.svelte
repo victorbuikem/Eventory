@@ -2,6 +2,7 @@
 	import { Calendar as CalendarPrimitive } from 'bits-ui';
 	import { buttonVariants } from '$lib/components/ui/button/index.js';
 	import { cn } from '$lib/utils.js';
+	import { goto } from '$app/navigation';
 
 	type $$Props = CalendarPrimitive.DayProps & { value: any[] };
 	type $$Events = CalendarPrimitive.DayEvents;
@@ -36,16 +37,21 @@
 		{#each value as event}
 			{#if event.month === date.month && event.day === date.day}
 				<li>
-					<div class="group flex">
+					<button
+						on:click={() => {
+							goto(`/edit?id=${event.id}`);
+						}}
+						class="group flex"
+					>
 						<p class="flex-auto truncate font-medium text-gray-900 group-hover:text-indigo-600">
-							{event.title}
+							{event.name}
 						</p>
 						<!-- <time
 							datetime="2022-01-03T10:00"
 							class="ml-3 hidden flex-none text-gray-500 group-hover:text-indigo-600 xl:block"
 							>{event.time}</time
 						> -->
-					</div>
+					</button>
 				</li>
 			{/if}{/each}
 	</ol>

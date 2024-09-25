@@ -9,12 +9,20 @@ export const POST = async ({ locals, request }) => {
 
 	await db.event.create({
 		data: {
-			title,
+			name: title,
 			location,
 			time: date,
-			invite_page: {},
 			slug: nanoid(8),
-			userId: locals.user?.id
+			userId: locals.user?.id,
+			config: {
+				title: '',
+				desc: 'What is this event about?',
+				attributes: {
+					btn_text: 'Submit',
+					email_label: 'Email',
+					email_placeholder: 'john@doe.com'
+				}
+			}
 		}
 	});
 

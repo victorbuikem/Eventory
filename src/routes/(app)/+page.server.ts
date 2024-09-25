@@ -10,7 +10,8 @@ export const load = (async ({ locals }) => {
 			userId: locals.user?.id
 		},
 		select: {
-			title: true,
+			id: true,
+			name: true,
 			time: true
 		}
 	});

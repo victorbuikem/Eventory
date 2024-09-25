@@ -15,7 +15,7 @@
 
 	async function handleSubmit(e: SubmitEvent) {
 		e.preventDefault();
-		const res = await fetch('/me/name', {
+		const res = await fetch('/api/me/name', {
 			method: 'POST',
 			body: JSON.stringify({ name })
 		});

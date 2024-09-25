@@ -6,6 +6,7 @@
 	import DateTimeInput from './ui/input/date-time-input.svelte';
 	import Input from './ui/input/input.svelte';
 	import { cn } from '$lib/utils';
+	import { invalidate } from '$app/navigation';
 
 	let date: DateValue | undefined = undefined;
 	let hour: number = 0;
@@ -22,6 +23,9 @@
 			body: JSON.stringify({ title, location, date: formattedDate })
 		});
 		let data = await res.json();
+		// invalidate((url) => {
+		// 	console.log(url)
+		// });
 	};
 
 	export let triggerVariant:
